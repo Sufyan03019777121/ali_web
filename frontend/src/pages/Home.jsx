@@ -1,59 +1,58 @@
-import React from 'react';
-import gold_imag from "../imags/gold_imag.jpeg"
-import silver_imag from "../imags/silver_image.jpeg"
-import dollar_imag from "../imags/dollar_imag.jpeg"
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Slider from '../components/Slider';
 
 const Home = () => {
-  return (
-    <div className="container mt-4" style={{ backgroundColor: '#fff8e1', minHeight: '100vh', padding: '20px' }}>
-      <h2 className="text-center mb-4" style={{ color: '#bfa100' }}>Today's Rates</h2>
-      <div className="row">
+  const [rates, setRates] = useState([]);
+  const [search, setSearch] = useState('');
 
-        {/* Gold Card */}
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/rates')
+      .then(res => setRates(res.data))
+      .catch(err => console.log(err));
+  }, []);
+
+  const filteredRates = rates.filter(rate =>
+    rate.city.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="container mt-4" style={{ backgroundColor: '#6b3c2bff', minHeight: '100vh', padding: '20px' }}>
+      <h2 className="text-center mb-4" style={{ color: '#bfa100' }}>Today's Rates</h2>
+      
+      <Slider/>
+
+      {/* Search Bar */}
+      <div className="mb-4 text-center">
+        <input
+          type="text"
+          placeholder="Search by city name..."
+          className="form-control w-75 mx-auto"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <div className="row">
+        {filteredRates.map(rate => (
+          <div className="col-md-4 text-center fw-bold" key={rate._id}>
+            <div className="card mb-4 shadow-sm">
+              <div className="card-body">
+                <h2 className="card-title text-primary shadow p-2">{rate.city}</h2>
+                <p className="card-text shadow p-2 rounded">24K Gold : {rate.gold_24k}</p>
+                <p className="card-text shadow p-2 rounded">22K Gold : {rate.gold_22k}</p>
+                <p className="card-text shadow p-2 rounded">Silver : {rate.silver}</p>
+                <p className="card-text shadow p-2 rounded">Dollar : {rate.dollar}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Example Static Gold Card (Optional) */}
         <div className="col-md-4">
           <div className="card mb-4 shadow-sm" style={{ borderColor: '#bfa100' }}>
-            <img
-              src={gold_imag}
-              className="card-img-top"
-              alt="Gold"
-              style={{ height: '200px', objectFit: 'cover' }}
-            />
-            <div className="card-body">
-              <h5 className="card-title" style={{ color: '#bfa100' }}>Gold Rates</h5>
-              <p className="card-text">24K: PKR 359,500 per tola</p>
-              <p className="card-text">22K: PKR 329,540 per tola</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Silver Card */}
-        <div className="col-md-4">
-          <div className="card mb-4 shadow-sm" style={{ borderColor: '#a8a8a8' }}>
-            <img
-              src={silver_imag}
-              className="card-img-top"
-              alt="Silver"
-              style={{ height: '200px', objectFit: 'cover' }}
-            />
-            <div className="card-body">
-              <h5 className="card-title" style={{ color: '#757575' }}>Silver Rates</h5>
-              <p className="card-text">PKR 4,200 per tola</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Dollar Card */}
-        <div className="col-md-4">
-          <div className="card mb-4 shadow-sm" style={{ borderColor: '#007bff' }}>
-            <img
-              src={dollar_imag}
-              className="card-img-top"
-              alt="Dollar"
-              style={{ height: '200px', objectFit: 'cover' }}
-            />
-            <div className="card-body">
-              <h5 className="card-title text-primary">Dollar Rate</h5>
-              <p className="card-text">USD to PKR: 278.50</p>
+            <div className="card-body text-center">
+              <h5 className="card-title" style={{ color: '#a18905ff' }}>Static Gold <br />Welcome to your website</h5>
             </div>
           </div>
         </div>

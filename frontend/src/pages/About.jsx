@@ -2,7 +2,7 @@ import React from 'react';
 
 const About = () => {
   return (
-    <div className="container mt-4" style={{ backgroundColor: '#fff8e1', minHeight: '80vh', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px #bfa100' }}>
+    <div className="container  mt-4" style={{ backgroundColor: '#fff8e1', minHeight: '80vh', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px #bfa100' }}>
       <h2 className="text-center mb-4" style={{ color: '#bfa100' }}>About Gold Types</h2>
       
       <div className="card shadow-sm" style={{ backgroundColor: '#fffaf0', borderColor: '#bfa100' }}>
