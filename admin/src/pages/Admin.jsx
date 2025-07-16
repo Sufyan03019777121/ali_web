@@ -6,7 +6,7 @@ const Admin = () => {
   const [form, setForm] = useState({ city: '', gold_24k: '', gold_22k: '', silver: '', dollar: '' });
 
   const fetchRates = () => {
-    axios.get('https://ali-web-backen.onrender.com/api/rates')
+    axios.get('http://localhost:5000/api/rates')
       .then(res => setRates(res.data))
       .catch(err => console.log(err));
   };
@@ -15,7 +15,7 @@ const Admin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('https://ali-web-backen.onrender.com/api/rates', form)
+    axios.post('http://localhost:5000/api/rates', form)
       .then(() => {
         fetchRates();
         setForm({ city: '', gold_24k: '', gold_22k: '', silver: '', dollar: '' });
@@ -23,13 +23,13 @@ const Admin = () => {
   };
 
   const handleDelete = (id) => {
-    axios.delete(`https://ali-web-backen.onrender.com/api/rates/${id}`)
+    axios.delete(`http://localhost:5000/api/rates/${id}`)
       .then(() => fetchRates());
   };
 
   const handleDeleteAll = () => {
     if (window.confirm("Are you sure you want to delete all rates?")) {
-      axios.delete('https://ali-web-backen.onrender.com/api/rates')
+      axios.delete('http://localhost:5000/api/rates')
         .then(() => fetchRates())
         .catch(err => console.log(err));
     }
