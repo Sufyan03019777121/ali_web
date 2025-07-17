@@ -6,9 +6,10 @@ const AdminMessage = () => {
   const [description, setDescription] = useState('');
   const [messages, setMessages] = useState([]);
 
+  // 🔄 Fetch all messages
   const fetchMessages = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/messages/all');
+      const res = await axios.get('https://ali-web-backen.onrender.com/api/messages/all');
       setMessages(res.data.data);
     } catch (err) {
       console.error(err);
@@ -20,10 +21,11 @@ const AdminMessage = () => {
     fetchMessages();
   }, []);
 
+  // ✅ Add message
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/messages/add', { description });
+      await axios.post('https://ali-web-backen.onrender.com/api/messages/add', { description });
       alert('Message saved!');
       setDescription('');
       fetchMessages();
@@ -33,9 +35,10 @@ const AdminMessage = () => {
     }
   };
 
+  // 🗑️ Delete single message
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/messages/${id}`);
+      await axios.delete(`https://ali-web-backen.onrender.com/api/messages/${id}`);
       alert('Message deleted!');
       fetchMessages();
     } catch (err) {
@@ -44,10 +47,11 @@ const AdminMessage = () => {
     }
   };
 
+  // 🗑️ Delete all messages
   const handleDeleteAll = async () => {
     if (window.confirm('Are you sure you want to delete all messages?')) {
       try {
-        await axios.delete('http://localhost:5000/api/messages');
+        await axios.delete('https://ali-web-backen.onrender.com/api/messages');
         alert('All messages deleted!');
         fetchMessages();
       } catch (err) {
@@ -64,6 +68,7 @@ const AdminMessage = () => {
           <h5 className="mb-0">📝 Admin Message Panel</h5>
         </div>
         <div className="card-body">
+          {/* Add Message Form */}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <textarea
@@ -81,6 +86,7 @@ const AdminMessage = () => {
 
           <hr />
 
+          {/* All Messages */}
           <h6>All Messages</h6>
           {messages.length === 0 ? (
             <p>No messages found.</p>

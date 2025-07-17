@@ -8,7 +8,7 @@ const UserMessage = () => {
   useEffect(() => {
     const fetchMsgs = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/messages/all');
+        const res = await axios.get('https://ali-web-backen.onrender.com/api/messages/all');
         setMessages(res.data.data || []);
       } catch (error) {
         console.error(error);
