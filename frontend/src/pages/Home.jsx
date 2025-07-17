@@ -8,7 +8,7 @@ const Home = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/rates')
+    axios.get('https://ali-web-backen.onrender.com/api/rates')
       .then(res => setRates(res.data))
       .catch(err => console.log(err));
   }, []);
