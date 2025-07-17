@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AdminMessage from './AdminMessage'
 
 const Admin = () => {
   const [rates, setRates] = useState([]);
@@ -65,6 +66,8 @@ const Admin = () => {
           </form>
         </div>
       </div>
+            
+          
 
       {/* Delete All Button */}
       <div className="mb-4 text-end">
@@ -108,6 +111,9 @@ const Admin = () => {
           </table>
         </div>
       </div>
+
+        {/* user massage  */}
+          <AdminMessage/>
     </div>
   );
 };

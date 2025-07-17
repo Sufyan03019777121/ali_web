@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from '../components/Slider';
+import UserMessage from './UserMessage';
 
 const Home = () => {
   const [rates, setRates] = useState([]);
@@ -47,6 +48,11 @@ const Home = () => {
             </div>
           </div>
         ))}
+
+
+         {/* user masage  */}
+
+          <UserMessage/>
 
         {/* Example Static Gold Card (Optional) */}
         <div className="col-md-4">
