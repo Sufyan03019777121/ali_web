@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   phone: String,
@@ -7,4 +7,6 @@ const userSchema = new mongoose.Schema({
   lastLogin: Date
 });
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+export default User;
