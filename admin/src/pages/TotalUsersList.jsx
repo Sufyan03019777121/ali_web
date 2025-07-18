@@ -6,24 +6,31 @@ const TotalUsersList = () => {
   const [count, setCount] = useState(0);
 
   const fetchUsers = async () => {
-    const res = await axios.get('http://localhost:5000/api/users');
+    const res = await axios.get('https://ali-web-backen.onrender.com/api/users');
     setUsers(res.data.users);
     setCount(res.data.count);
   };
 
   const blockUser = async (phone) => {
-    await axios.post('http://localhost:5000/api/block-user', { phone });
+    await axios.post('https://ali-web-backen.onrender.com/api/block-user', { phone });
     fetchUsers();
   };
 
   const unblockUser = async (phone) => {
-    await axios.post('http://localhost:5000/api/unblock-user', { phone });
+    await axios.post('https://ali-web-backen.onrender.com/api/unblock-user', { phone });
     fetchUsers();
   };
 
   const setCategory = async (phone, category) => {
-    await axios.post('http://localhost:5000/api/set-category', { phone, category });
+    await axios.post('https://ali-web-backen.onrender.com/api/set-category', { phone, category });
     fetchUsers();
+  };
+
+  const deleteUser = async (phone) => {
+    if (window.confirm("کیا آپ واقعی اس user کو delete کرنا چاہتے ہیں؟")) {
+      await axios.post('https://ali-web-backen.onrender.com/api/delete-user', { phone });
+      fetchUsers();
+    }
   };
 
   useEffect(() => {
@@ -53,19 +60,20 @@ const TotalUsersList = () => {
               <td>{u.category}</td>
               <td>
                 {u.blocked ? (
-                  <button className="btn btn-success btn-sm" onClick={() => unblockUser(u.phone)}>Unblock</button>
+                  <button className="btn btn-success btn-sm me-1" onClick={() => unblockUser(u.phone)}>Unblock</button>
                 ) : (
-                  <button className="btn btn-danger btn-sm" onClick={() => blockUser(u.phone)}>Block</button>
+                  <button className="btn btn-danger btn-sm me-1" onClick={() => blockUser(u.phone)}>Block</button>
                 )}
                 <select
                   value={u.category}
                   onChange={(e) => setCategory(u.phone, e.target.value)}
-                  className="ml-2"
+                  className="me-1"
                 >
                   <option value="monthly">Monthly</option>
                   <option value="6month">6 Month</option>
                   <option value="yearly">Yearly</option>
                 </select>
+                <button className="btn btn-warning btn-sm" onClick={() => deleteUser(u.phone)}>Delete</button>
               </td>
             </tr>
           ))}

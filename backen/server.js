@@ -64,5 +64,13 @@ app.post('/api/set-category', async (req, res) => {
   res.json({ success: true });
 });
 
+// Delete User
+app.post('/api/delete-user', async (req, res) => {
+  const { phone } = req.body;
+  await User.deleteOne({ phone });
+  res.json({ success: true });
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

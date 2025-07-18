@@ -6,7 +6,7 @@ const Login = ({ setLoggedIn }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post('http://localhost:5000/api/login', { phone });
+    const res = await axios.post('https://ali-web-backen.onrender.com/api/login', { phone });
     if (!res.data.blocked) {
       setLoggedIn(true);
     } else {
