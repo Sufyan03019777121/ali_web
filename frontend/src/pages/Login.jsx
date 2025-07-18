@@ -6,12 +6,30 @@ const Login = ({ setLoggedIn }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const phoneRegex = /^03\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      alert('Phone number must be 11 digits and start with 03');
+      return;
+    }
+
     const res = await axios.post('https://ali-web-backen.onrender.com/api/login', { phone });
     if (!res.data.blocked) {
       setLoggedIn(true);
     } else {
       alert('Blocked by admin');
     }
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setPhone(value);
+    }
+  };
+
+  const handleFocus = (e) => {
+    e.target.select(); // ✅ select entire number on focus
   };
 
   return (
@@ -21,10 +39,12 @@ const Login = ({ setLoggedIn }) => {
         <input
           type="text"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={handleChange}
+          onFocus={handleFocus} // ✅ added here
           placeholder="Enter phone number"
           required
           className="form-control mb-2"
+          maxLength="11"
         />
         <button type="submit" className="btn btn-primary">Login</button>
       </form>

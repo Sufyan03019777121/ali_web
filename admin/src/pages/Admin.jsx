@@ -127,9 +127,9 @@ const Admin = () => {
 
       {/* 🔘 Buttons at Bottom Center */}
       <div className="text-center my-4">
-        <button className="btn btn-outline-primary me-2" onClick={() => setShowComponent('message')}>Show Message Component</button>
-        <button className="btn btn-outline-secondary me-2" onClick={() => setShowComponent('comp2')}>TotalUsersList</button>
-        <button className="btn btn-outline-success me-2" onClick={() => setShowComponent('comp3')}>Show Third Component</button>
+        <button className="btn btn-outline-primary mb-2 me-2" onClick={() => setShowComponent('message')}>Show Message Component</button>
+        <button className="btn btn-outline-secondary mb-2 me-2" onClick={() => setShowComponent('comp2')}>TotalUsersList</button>
+        <button className="btn btn-outline-success mb-2 me-2" onClick={() => setShowComponent('comp3')}>Show Third Component</button>
         <button className="btn btn-outline-warning" onClick={() => setShowComponent('comp4')}>Show Fourth Component</button>
       </div>
     </div>
