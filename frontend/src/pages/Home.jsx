@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from '../components/Slider';
 import UserMessage from './UserMessage';
+import PaymentPrompt from './PaymentPrompt';
 
 const Home = () => {
   const [rates, setRates] = useState([]);
@@ -22,6 +23,7 @@ const Home = () => {
       <h2 className="text-center mb-4" style={{ color: '#bfa100' }}>Today's Rates</h2>
       
       <Slider/>
+     
 
       {/* Search Bar */}
       <div className="mb-4 text-center">
@@ -53,7 +55,7 @@ const Home = () => {
          {/* user masage  */}
 
           <UserMessage/>
-
+          <PaymentPrompt/>
         {/* Example Static Gold Card (Optional) */}
         <div className="col-md-4">
           <div className="card mb-4 shadow-sm" style={{ borderColor: '#bfa100' }}>
@@ -62,7 +64,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-
+    
       </div>
     </div>
   );
