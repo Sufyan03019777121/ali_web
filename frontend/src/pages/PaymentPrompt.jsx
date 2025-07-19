@@ -7,7 +7,7 @@ const PaymentPrompt = () => {
     // Show prompt after 3 seconds
     const timer = setTimeout(() => {
       setShowPrompt(true);
-    }, 3000);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -33,11 +33,11 @@ const PaymentPrompt = () => {
             <h3 style={{ color: '#bfa100' }}>🔒 Subscription Required</h3>
             <p>Select your package to continue:</p>
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li>📅 Monthly: PKR 500</li>
-              <li>🗓️ 6 Months: PKR 2500</li>
-              <li>📆 Yearly: PKR 4500</li>
+              <li>📅 Monthly: PKR 200</li>
+              <li>🗓️ 6 Months: PKR 1000</li>
+              <li>📆 Yearly: PKR 2000</li>
             </ul>
-            <p>Pay via Easypaisa/JazzCash:<br/><strong>0342-1165122</strong></p>
+            <p>only Easypaisa:<br/><strong>0342-1165182</strong></p>
             <button
               onClick={handlePaymentDone}
               style={{ backgroundColor: '#bfa100', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', marginTop: '10px' }}
