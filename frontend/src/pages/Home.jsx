@@ -17,14 +17,23 @@ const Home = () => {
       .catch(err => console.log(err));
   }, []);
 
-  // ✅ Fetch user status on load (example: from localStorage or API)
+  // ✅ Fetch user status & set auto-block timer on load
   useEffect(() => {
     const phone = localStorage.getItem('userPhone');
     if (phone) {
       setUserPhone(phone);
+
+      // 🔎 Check if user is blocked
       axios.post('https://ali-web-backen.onrender.com/api/login', { phone })
         .then(res => {
           setUserBlocked(res.data.blocked);
+
+          // ✅ Call auto-block API only if user is not blocked
+          if (!res.data.blocked) {
+            axios.post('https://ali-web-backen.onrender.com/api/auto-block', { phone })
+              .then(() => console.log('Auto-block timer set for user:', phone))
+              .catch(err => console.log(err));
+          }
         })
         .catch(err => console.log(err));
     }
@@ -37,7 +46,7 @@ const Home = () => {
   return (
     <div className="container mt-4" style={{ backgroundColor: '#6b3c2bff', minHeight: '100vh', padding: '20px' }}>
       <h2 className="text-center mb-4" style={{ color: '#bfa100' }}>Today's Rates</h2>
-      
+
       <Slider />
 
       {/* 🔎 Search Bar */}
@@ -69,7 +78,7 @@ const Home = () => {
         {/* 📝 User Message */}
         <UserMessage />
 
-        {/* 💳 Payment Prompt - show only if not blocked */}
+        {/* 💳 Payment Prompt - show only if user exists and is not blocked */}
         {userPhone && !userBlocked && (
           <PaymentPrompt phone={userPhone} blocked={userBlocked} />
         )}
@@ -78,7 +87,9 @@ const Home = () => {
         <div className="col-md-4">
           <div className="card mb-4 shadow-sm" style={{ borderColor: '#bfa100' }}>
             <div className="card-body text-center">
-              <h5 className="card-title" style={{ color: '#a18905ff' }}>Static Gold <br />Welcome to your website</h5>
+              <h5 className="card-title" style={{ color: '#a18905ff' }}>
+                Static Gold <br />Welcome to your website
+              </h5>
             </div>
           </div>
         </div>

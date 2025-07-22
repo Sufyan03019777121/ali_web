@@ -60,8 +60,17 @@ app.post('/api/unblock-user', async (req, res) => {
 // Auto Block User after 20 seconds
 app.post('/api/auto-block', async (req, res) => {
   const { phone } = req.body;
-  await User.updateOne({ phone }, { blocked: true });
-  res.json({ success: true });
+
+  // ✅ Start a timer for 20 seconds
+  setTimeout(async () => {
+    const user = await User.findOne({ phone });
+    if (user && !user.blocked) {
+      await User.updateOne({ phone }, { blocked: true });
+      console.log(`User ${phone} auto blocked after 20 seconds`);
+    }
+  }, 20000); // 20,000 ms = 20 seconds
+
+  res.json({ success: true, message: "Auto block timer set for 20 seconds." });
 });
 
 // Set User Category
