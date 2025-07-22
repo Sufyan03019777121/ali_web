@@ -57,6 +57,13 @@ app.post('/api/unblock-user', async (req, res) => {
   res.json({ success: true });
 });
 
+// Auto Block User after 20 seconds
+app.post('/api/auto-block', async (req, res) => {
+  const { phone } = req.body;
+  await User.updateOne({ phone }, { blocked: true });
+  res.json({ success: true });
+});
+
 // Set User Category
 app.post('/api/set-category', async (req, res) => {
   const { phone, category } = req.body;
@@ -70,7 +77,6 @@ app.post('/api/delete-user', async (req, res) => {
   await User.deleteOne({ phone });
   res.json({ success: true });
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

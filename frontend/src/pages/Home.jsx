@@ -7,11 +7,27 @@ import PaymentPrompt from './PaymentPrompt';
 const Home = () => {
   const [rates, setRates] = useState([]);
   const [search, setSearch] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [userBlocked, setUserBlocked] = useState(false);
 
+  // ✅ Fetch rates on load
   useEffect(() => {
     axios.get('https://ali-web-backen.onrender.com/api/rates')
       .then(res => setRates(res.data))
       .catch(err => console.log(err));
+  }, []);
+
+  // ✅ Fetch user status on load (example: from localStorage or API)
+  useEffect(() => {
+    const phone = localStorage.getItem('userPhone');
+    if (phone) {
+      setUserPhone(phone);
+      axios.post('https://ali-web-backen.onrender.com/api/login', { phone })
+        .then(res => {
+          setUserBlocked(res.data.blocked);
+        })
+        .catch(err => console.log(err));
+    }
   }, []);
 
   const filteredRates = rates.filter(rate =>
@@ -22,10 +38,9 @@ const Home = () => {
     <div className="container mt-4" style={{ backgroundColor: '#6b3c2bff', minHeight: '100vh', padding: '20px' }}>
       <h2 className="text-center mb-4" style={{ color: '#bfa100' }}>Today's Rates</h2>
       
-      <Slider/>
-     
+      <Slider />
 
-      {/* Search Bar */}
+      {/* 🔎 Search Bar */}
       <div className="mb-4 text-center">
         <input
           type="text"
@@ -51,12 +66,15 @@ const Home = () => {
           </div>
         ))}
 
+        {/* 📝 User Message */}
+        <UserMessage />
 
-         {/* user masage  */}
+        {/* 💳 Payment Prompt - show only if not blocked */}
+        {userPhone && !userBlocked && (
+          <PaymentPrompt phone={userPhone} blocked={userBlocked} />
+        )}
 
-          <UserMessage/>
-          <PaymentPrompt/>
-        {/* Example Static Gold Card (Optional) */}
+        {/* Example Static Gold Card */}
         <div className="col-md-4">
           <div className="card mb-4 shadow-sm" style={{ borderColor: '#bfa100' }}>
             <div className="card-body text-center">
@@ -64,7 +82,6 @@ const Home = () => {
             </div>
           </div>
         </div>
-    
       </div>
     </div>
   );
