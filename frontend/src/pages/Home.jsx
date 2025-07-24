@@ -17,23 +17,14 @@ const Home = () => {
       .catch(err => console.log(err));
   }, []);
 
-  // ✅ Fetch user status & set auto-block timer on load
+  // ✅ Fetch user status on load (example: from localStorage or API)
   useEffect(() => {
     const phone = localStorage.getItem('userPhone');
     if (phone) {
       setUserPhone(phone);
-
-      // 🔎 Check if user is blocked
       axios.post('https://ali-web-backen.onrender.com/api/login', { phone })
         .then(res => {
           setUserBlocked(res.data.blocked);
-
-          // ✅ Call auto-block API only if user is not blocked
-          if (!res.data.blocked) {
-            axios.post('https://ali-web-backen.onrender.com/api/auto-block', { phone })
-              .then(() => console.log('Auto-block timer set for user:', phone))
-              .catch(err => console.log(err));
-          }
         })
         .catch(err => console.log(err));
     }
