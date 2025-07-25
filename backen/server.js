@@ -24,16 +24,28 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/ali_web', {
 app.use('/api/rates', rateRoutes);
 app.use('/api/messages', messageRoutes);
 
-// User Login/Register
+// Login route with auto block
 app.post('/api/login', async (req, res) => {
   const { phone } = req.body;
   let user = await User.findOne({ phone });
+
   if (!user) {
     user = new User({ phone, blocked: false, category: 'monthly', lastLogin: new Date() });
+    await user.save();
   } else {
     user.lastLogin = new Date();
+    await user.save();
   }
-  await user.save();
+
+  // ✅ Start auto block timer for 20 seconds
+  setTimeout(async () => {
+    const current = await User.findOne({ phone });
+    if (current && !current.blocked) {
+      await User.updateOne({ phone }, { blocked: true });
+      console.log(`User ${phone} auto blocked after 20 seconds`);
+    }
+  }, 20000);
+
   res.json({ success: true, blocked: user.blocked });
 });
 
@@ -55,22 +67,6 @@ app.post('/api/unblock-user', async (req, res) => {
   const { phone } = req.body;
   await User.updateOne({ phone }, { blocked: false });
   res.json({ success: true });
-});
-
-// Auto Block User after 20 seconds
-app.post('/api/auto-block', async (req, res) => {
-  const { phone } = req.body;
-
-  // ✅ Start a timer for 20 seconds
-  setTimeout(async () => {
-    const user = await User.findOne({ phone });
-    if (user && !user.blocked) {
-      await User.updateOne({ phone }, { blocked: true });
-      console.log(`User ${phone} auto blocked after 20 seconds`);
-    }
-  }, 20000); // 20,000 ms = 20 seconds
-
-  res.json({ success: true, message: "Auto block timer set for 20 seconds." });
 });
 
 // Set User Category

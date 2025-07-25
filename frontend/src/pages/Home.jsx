@@ -7,7 +7,7 @@ import PaymentPrompt from './PaymentPrompt';
 const Home = () => {
   const [rates, setRates] = useState([]);
   const [search, setSearch] = useState('');
-  const [userPhone, setUserPhone] = useState('');
+  const [userPhone, setUserPhone] = useState(''); // ✅ no localStorage
   const [userBlocked, setUserBlocked] = useState(false);
 
   // ✅ Fetch rates on load
@@ -17,17 +17,17 @@ const Home = () => {
       .catch(err => console.log(err));
   }, []);
 
-  // ✅ Fetch user status on load (example: from localStorage or API)
+  // ✅ Fetch user status on load - from API directly or props
   useEffect(() => {
-    const phone = localStorage.getItem('userPhone');
-    if (phone) {
-      setUserPhone(phone);
-      axios.post('https://ali-web-backen.onrender.com/api/login', { phone })
-        .then(res => {
-          setUserBlocked(res.data.blocked);
-        })
-        .catch(err => console.log(err));
-    }
+    // For example: default test phone (delete this in production)
+    const phone = '03001234567'; // 🔥 hardcoded for test
+    setUserPhone(phone);
+
+    axios.post('https://ali-web-backen.onrender.com/api/login', { phone })
+      .then(res => {
+        setUserBlocked(res.data.blocked);
+      })
+      .catch(err => console.log(err));
   }, []);
 
   const filteredRates = rates.filter(rate =>

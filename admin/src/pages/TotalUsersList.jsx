@@ -6,29 +6,33 @@ const TotalUsersList = () => {
   const [count, setCount] = useState(0);
 
   const fetchUsers = async () => {
-    const res = await axios.get('https://ali-web-backen.onrender.com/api/users');
-    setUsers(res.data.users);
-    setCount(res.data.count);
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users`);
+      setUsers(res.data.users);
+      setCount(res.data.count);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
   };
 
   const blockUser = async (phone) => {
-    await axios.post('https://ali-web-backen.onrender.com/api/block-user', { phone });
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/block-user`, { phone });
     fetchUsers();
   };
 
   const unblockUser = async (phone) => {
-    await axios.post('https://ali-web-backen.onrender.com/api/unblock-user', { phone });
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/unblock-user`, { phone });
     fetchUsers();
   };
 
   const setCategory = async (phone, category) => {
-    await axios.post('https://ali-web-backen.onrender.com/api/set-category', { phone, category });
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/set-category`, { phone, category });
     fetchUsers();
   };
 
   const deleteUser = async (phone) => {
     if (window.confirm("کیا آپ واقعی اس user کو delete کرنا چاہتے ہیں؟")) {
-      await axios.post('https://ali-web-backen.onrender.com/api/delete-user', { phone });
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/delete-user`, { phone });
       fetchUsers();
     }
   };
@@ -57,13 +61,7 @@ const TotalUsersList = () => {
               <td>{u.phone}</td>
               <td>{u.blocked ? 'Yes' : 'No'}</td>
               <td>{new Date(u.lastLogin).toLocaleString()}</td>
-              <td>{u.category}</td>
               <td>
-                {u.blocked ? (
-                  <button className="btn btn-success btn-sm me-1" onClick={() => unblockUser(u.phone)}>Unblock</button>
-                ) : (
-                  <button className="btn btn-danger btn-sm me-1" onClick={() => blockUser(u.phone)}>Block</button>
-                )}
                 <select
                   value={u.category}
                   onChange={(e) => setCategory(u.phone, e.target.value)}
@@ -73,6 +71,13 @@ const TotalUsersList = () => {
                   <option value="6month">6 Month</option>
                   <option value="yearly">Yearly</option>
                 </select>
+              </td>
+              <td>
+                {u.blocked ? (
+                  <button className="btn btn-success btn-sm me-1" onClick={() => unblockUser(u.phone)}>Unblock</button>
+                ) : (
+                  <button className="btn btn-danger btn-sm me-1" onClick={() => blockUser(u.phone)}>Block</button>
+                )}
                 <button className="btn btn-warning btn-sm" onClick={() => deleteUser(u.phone)}>Delete</button>
               </td>
             </tr>

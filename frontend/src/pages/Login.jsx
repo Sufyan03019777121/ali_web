@@ -13,11 +13,18 @@ const Login = ({ setLoggedIn }) => {
       return;
     }
 
-    const res = await axios.post('https://ali-web-backen.onrender.com/api/login', { phone });
-    if (!res.data.blocked) {
-      setLoggedIn(true);
-    } else {
-      alert('Blocked by admin');
+    try {
+      const res = await axios.post('https://ali-web-backen.onrender.com/api/login', { phone });
+
+      if (!res.data.blocked) {
+        setLoggedIn(true);
+        alert('✅ Login successful. You will be blocked after 20 seconds automatically.');
+      } else {
+        alert('⛔ Blocked by admin');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('❌ Error logging in');
     }
   };
 
@@ -40,7 +47,7 @@ const Login = ({ setLoggedIn }) => {
           type="text"
           value={phone}
           onChange={handleChange}
-          onFocus={handleFocus} // ✅ added here
+          onFocus={handleFocus}
           placeholder="Enter phone number"
           required
           className="form-control mb-2"
