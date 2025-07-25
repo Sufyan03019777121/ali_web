@@ -18,10 +18,18 @@ const Login = ({ setLoggedIn }) => {
 
       if (!res.data.blocked) {
         setLoggedIn(true);
-        alert('✅ Login successful. You will be blocked after 20 seconds automatically.');
+
+        // ✅ Check autoBlocked field in response
+        if (!res.data.autoBlocked) {
+          alert('✅ Login successful. You will be blocked after 20 seconds automatically.');
+        } else {
+          alert('✅ Login successful.');
+        }
+
       } else {
         alert('⛔ Blocked by admin');
       }
+
     } catch (error) {
       console.error('Login error:', error);
       alert('❌ Error logging in');

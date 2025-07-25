@@ -58,7 +58,8 @@ app.post('/api/login', async (req, res) => {
     }
   }
 
-  res.json({ success: true, blocked: user.blocked });
+  // ✅ Send autoBlocked field in response for frontend alert logic
+  res.json({ success: true, blocked: user.blocked, autoBlocked: user.autoBlocked });
 });
 
 // Get All Users
