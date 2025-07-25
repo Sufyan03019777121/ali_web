@@ -5,9 +5,12 @@ const TotalUsersList = () => {
   const [users, setUsers] = useState([]);
   const [count, setCount] = useState(0);
 
+  const backendURL = 'https://ali-web-backen.onrender.com';
+
+  // ✅ Users fetch karan wala function
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users`);
+      const res = await axios.get(`${backendURL}/api/users`);
       setUsers(res.data.users);
       setCount(res.data.count);
     } catch (error) {
@@ -15,24 +18,28 @@ const TotalUsersList = () => {
     }
   };
 
+  // ✅ Block user
   const blockUser = async (phone) => {
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/block-user`, { phone });
+    await axios.post(`${backendURL}/api/block-user`, { phone });
     fetchUsers();
   };
 
+  // ✅ Unblock user
   const unblockUser = async (phone) => {
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/unblock-user`, { phone });
+    await axios.post(`${backendURL}/api/unblock-user`, { phone });
     fetchUsers();
   };
 
+  // ✅ Set category
   const setCategory = async (phone, category) => {
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/set-category`, { phone, category });
+    await axios.post(`${backendURL}/api/set-category`, { phone, category });
     fetchUsers();
   };
 
+  // ✅ Delete user
   const deleteUser = async (phone) => {
     if (window.confirm("کیا آپ واقعی اس user کو delete کرنا چاہتے ہیں؟")) {
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/delete-user`, { phone });
+      await axios.post(`${backendURL}/api/delete-user`, { phone });
       fetchUsers();
     }
   };

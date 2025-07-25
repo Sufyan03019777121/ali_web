@@ -3,10 +3,9 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   phone: String,
   blocked: Boolean,
+  autoBlocked: { type: Boolean, default: false }, // ✅ added
   category: String,
-  lastLogin: Date
+  lastLogin: Date,
 });
 
-const User = mongoose.model('User', userSchema);
-
-export default User;
+export default mongoose.model('User', userSchema);
