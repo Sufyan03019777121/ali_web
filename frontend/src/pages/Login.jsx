@@ -1,8 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Login = ({ setLoggedIn }) => {
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState(localStorage.getItem('userPhone') || '');
+
+  useEffect(() => {
+    // ✅ Auto-login if already stored
+    const savedPhone = localStorage.getItem('userPhone');
+    if (savedPhone) {
+      checkLogin(savedPhone);
+    }
+  }, []);
+
+  const checkLogin = async (phoneNumber) => {
+    try {
+      const res = await axios.post('https://ali-web-backen.onrender.com/api/login', { phone: phoneNumber });
+
+      if (!res.data.blocked) {
+        setLoggedIn(true);
+        localStorage.setItem('userPhone', phoneNumber);
+
+        if (!res.data.autoBlocked) {
+          alert('✅ Login successful. You will be blocked after 20 seconds automatically.');
+        } else {
+          alert('✅ Login successful.');
+        }
+
+      } else {
+        alert('⛔ Blocked by admin');
+        localStorage.removeItem('userPhone');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('❌ Error logging in');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,27 +45,7 @@ const Login = ({ setLoggedIn }) => {
       return;
     }
 
-    try {
-      const res = await axios.post('https://ali-web-backen.onrender.com/api/login', { phone });
-
-      if (!res.data.blocked) {
-        setLoggedIn(true);
-
-        // ✅ Check autoBlocked field in response
-        if (!res.data.autoBlocked) {
-          alert('✅ Login successful. You will be blocked after 20 seconds automatically.');
-        } else {
-          alert('✅ Login successful.');
-        }
-
-      } else {
-        alert('⛔ Blocked by admin');
-      }
-
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('❌ Error logging in');
-    }
+    await checkLogin(phone);
   };
 
   const handleChange = (e) => {
@@ -44,7 +56,7 @@ const Login = ({ setLoggedIn }) => {
   };
 
   const handleFocus = (e) => {
-    e.target.select(); // ✅ select entire number on focus
+    e.target.select(); // select full number
   };
 
   return (

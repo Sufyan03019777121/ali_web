@@ -36,6 +36,7 @@ const Home = () => {
 
   return (
     <div className="container mt-4" style={{ backgroundColor: '#6b3c2bff', minHeight: '100vh', padding: '20px' }}>
+      
       <h2 className="text-center mb-4" style={{ color: '#bfa100' }}>Today's Rates</h2>
 
       <Slider />
