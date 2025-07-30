@@ -33,7 +33,7 @@ app.post('/api/login', async (req, res) => {
     user = new User({ phone, blocked: false, autoBlocked: false, category: 'monthly', lastLogin: new Date() });
     await user.save();
 
-    // ✅ Start auto block timer for 20 seconds (first time only)
+    // ✅ Start auto block timer
     setTimeout(async () => {
       const current = await User.findOne({ phone });
       if (current && !current.blocked && !current.autoBlocked) {
@@ -46,7 +46,7 @@ app.post('/api/login', async (req, res) => {
     user.lastLogin = new Date();
     await user.save();
 
-    // ✅ Start timer only if not blocked and not already auto blocked
+    // ✅ Start timer if not already blocked
     if (!user.blocked && !user.autoBlocked) {
       setTimeout(async () => {
         const current = await User.findOne({ phone });
@@ -58,8 +58,16 @@ app.post('/api/login', async (req, res) => {
     }
   }
 
-  // ✅ Send autoBlocked field in response for frontend alert logic
   res.json({ success: true, blocked: user.blocked, autoBlocked: user.autoBlocked });
+});
+
+// ✅ NEW: Check block status for frontend after 20s
+app.post('/api/check-block', async (req, res) => {
+  const { phone } = req.body;
+  const user = await User.findOne({ phone });
+  
+  if (!user) return res.status(404).json({ blocked: false });
+  res.json({ blocked: user.blocked });
 });
 
 // Get All Users
@@ -79,7 +87,6 @@ app.post('/api/block-user', async (req, res) => {
 app.post('/api/unblock-user', async (req, res) => {
   const { phone } = req.body;
   await User.updateOne({ phone }, { blocked: false, autoBlocked: true });
-  // ✅ admin ne unblock kar diya, ab kabhi auto block nahi hoga
   res.json({ success: true });
 });
 

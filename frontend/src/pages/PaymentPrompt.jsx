@@ -8,7 +8,7 @@ const PaymentPrompt = ({ phone, blocked }) => {
       // ✅ Show prompt after 3 seconds only
       const promptTimer = setTimeout(() => {
         setShowPrompt(true);
-      }, 3000);
+      }, 7000);
 
       return () => clearTimeout(promptTimer);
     }
