@@ -33,7 +33,7 @@ app.post('/api/login', async (req, res) => {
     user = new User({ phone, blocked: false, autoBlocked: false, category: 'monthly', lastLogin: new Date() });
     await user.save();
 
-    // ✅ Start auto block timer
+    // Start auto block timer
     setTimeout(async () => {
       const current = await User.findOne({ phone });
       if (current && !current.blocked && !current.autoBlocked) {
@@ -46,7 +46,7 @@ app.post('/api/login', async (req, res) => {
     user.lastLogin = new Date();
     await user.save();
 
-    // ✅ Start timer if not already blocked
+    // Start timer if not already blocked
     if (!user.blocked && !user.autoBlocked) {
       setTimeout(async () => {
         const current = await User.findOne({ phone });
@@ -61,7 +61,7 @@ app.post('/api/login', async (req, res) => {
   res.json({ success: true, blocked: user.blocked, autoBlocked: user.autoBlocked });
 });
 
-// ✅ NEW: Check block status for frontend after 20s
+// Check block status for frontend after 20s
 app.post('/api/check-block', async (req, res) => {
   const { phone } = req.body;
   const user = await User.findOne({ phone });
@@ -102,6 +102,22 @@ app.post('/api/delete-user', async (req, res) => {
   const { phone } = req.body;
   await User.deleteOne({ phone });
   res.json({ success: true });
+});
+
+// Delete multiple users
+app.post('/api/delete-users', async (req, res) => {
+  const { phones } = req.body; // expect array of phones
+  if (!Array.isArray(phones)) {
+    return res.status(400).json({ success: false, message: 'phones must be an array' });
+  }
+
+  try {
+    await User.deleteMany({ phone: { $in: phones } });
+    res.json({ success: true, message: 'Users deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting users:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

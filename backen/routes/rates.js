@@ -1,4 +1,3 @@
-// routes/rates.js
 import express from 'express';
 import Rate from '../models/Rate.js';
 
@@ -19,26 +18,28 @@ router.post('/', async (req, res) => {
   try {
     const newRate = new Rate(req.body);
     await newRate.save();
-    res.json({ message: 'Rate added successfully', rate: newRate });
+    res.status(201).json({ message: 'Rate added successfully', rate: newRate });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// PUT update rate
+// PUT update rate by ID
 router.put('/:id', async (req, res) => {
   try {
     const updatedRate = await Rate.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedRate) return res.status(404).json({ message: 'Rate not found' });
     res.json(updatedRate);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// DELETE one rate
+// DELETE one rate by ID
 router.delete('/:id', async (req, res) => {
   try {
-    await Rate.findByIdAndDelete(req.params.id);
+    const deletedRate = await Rate.findByIdAndDelete(req.params.id);
+    if (!deletedRate) return res.status(404).json({ message: 'Rate not found' });
     res.json({ message: 'Rate deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });
