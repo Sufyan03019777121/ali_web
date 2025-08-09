@@ -1,11 +1,14 @@
-import mongoose from 'mongoose';
+// models/Rate.js
+const mongoose = require('mongoose');
 
-const rateSchema = new mongoose.Schema({
+const RateSchema = new mongoose.Schema({
   city: String,
   gold_24k: String,
   gold_22k: String,
+  gold_21k: String,
   silver: String,
-  dollar: String
-});
+  dollar_interbank: String,
+  dollar_open: String
+}, { timestamps: true });
 
-export default mongoose.model('Rate', rateSchema);
+module.exports = mongoose.model('Rate', RateSchema);

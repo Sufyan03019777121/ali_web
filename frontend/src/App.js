@@ -10,19 +10,20 @@ import './App.css';
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  if (!loggedIn) {
-    // If not logged in, show only Login page
-    return <Login setLoggedIn={setLoggedIn} />;
-  }
-
-  // If logged in, show Navbar and Routes
   return (
     <Router>
-      <MyNavbar />
+      {loggedIn && <MyNavbar />}
+      
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
+        {!loggedIn ? (
+          <Route path="*" element={<Login setLoggedIn={setLoggedIn} />} />
+        ) : (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </>
+        )}
       </Routes>
     </Router>
   );
