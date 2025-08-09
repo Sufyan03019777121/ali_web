@@ -6,11 +6,11 @@ import dollar_imag from '../imags/dollar_imag.jpeg';
 
 const Slider = () => {
   return (
-    <div className="container">
+    <div className="container ">
       <Carousel>
         <Carousel.Item>
           <img
-            className="d-block w-100 mb-5"
+            className="d-block w-100 mb-5 mt-4"
             src={gold_imag}
             alt="First slide"
           />
@@ -22,7 +22,7 @@ const Slider = () => {
 
         <Carousel.Item>
           <img
-            className="d-block w-100 mb-5"
+            className="d-block w-100 mb-5 mt-4"
             src={silver_image}
             alt="Second slide"
           />
@@ -34,7 +34,7 @@ const Slider = () => {
 
         <Carousel.Item>
           <img
-            className="d-block w-100 mb-5"
+            className="d-block w-100 mb-5 mt-4"
             src={dollar_imag}
             alt="Third slide"
           />

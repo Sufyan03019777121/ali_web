@@ -4,25 +4,48 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UserMessage = () => {
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchMsgs = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get('https://ali-web-backen.onrender.com/api/messages/all');
+      setMessages(res.data.data || []);
+    } catch (error) {
+      console.error(error);
+      setMessages([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchMsgs = async () => {
-      try {
-        const res = await axios.get('https://ali-web-backen.onrender.com/api/messages/all');
-        setMessages(res.data.data || []);
-      } catch (error) {
-        console.error(error);
-        setMessages([]);
-      }
-    };
     fetchMsgs();
   }, []);
 
   return (
     <div className="container mt-4 mb-4">
       <div className="card shadow-sm">
-        <div className="card-header bg-primary text-white">
+        <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
           <h5 className="mb-0">📢 Admin Messages</h5>
+          <button
+            className="btn btn-sm btn-light"
+            onClick={fetchMsgs}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Refreshing...
+              </>
+            ) : (
+              <>🔄 Refresh</>
+            )}
+          </button>
         </div>
         <div className="card-body">
           {messages.length === 0 ? (

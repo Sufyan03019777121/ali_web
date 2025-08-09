@@ -4,3 +4,10 @@
   box-sizing: border-box;
   
 }
+.backgrond_color_brown{
+  background-color: rgb(71, 10, 10);
+}
+.refresh_button{
+  background-color: aliceblue;
+  color: blue;
+}
