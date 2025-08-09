@@ -1,5 +1,5 @@
 // models/Rate.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const RateSchema = new mongoose.Schema({
   city: String,
@@ -11,4 +11,6 @@ const RateSchema = new mongoose.Schema({
   dollar_open: String
 }, { timestamps: true });
 
-module.exports = mongoose.model('Rate', RateSchema);
+const Rate = mongoose.model('Rate', RateSchema);
+
+export default Rate; // ✅ ESM default export
