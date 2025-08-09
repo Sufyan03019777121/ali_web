@@ -1,9 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Login = ({ setLoggedIn }) => {
   const [phone, setPhone] = useState('');
   const [redirected, setRedirected] = useState(false);
+
+  // ✅ Auto-login on page load if phone exists and not blocked
+  useEffect(() => {
+    const storedPhone = localStorage.getItem('userPhone');
+    if (storedPhone) {
+      axios
+        .post('https://ali-web-backen.onrender.com/api/check-block', { phone: storedPhone })
+        .then(res => {
+          if (!res.data.blocked) {
+            setLoggedIn(true);
+            window.location.href = '/'; // Auto go to Home
+          } else {
+            localStorage.removeItem('userPhone');
+          }
+        })
+        .catch(err => console.error(err));
+    }
+  }, [setLoggedIn]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,43 +37,41 @@ const Login = ({ setLoggedIn }) => {
 
       if (!res.data.blocked) {
         setLoggedIn(true);
+        localStorage.setItem('userPhone', phone);
 
-        if (!res.data.autoBlocked) {
-          alert('✅ Login successful. You will be blocked after 20 seconds automatically.');
-        } else {
-          alert('✅ Login successful.');
-        }
+        alert('✅ Login successful. Status will be checked in 19 seconds.');
 
-        // ✅ Only once
         if (!redirected) {
           setRedirected(true);
 
           setTimeout(async () => {
+            console.log('♻️ Checking block status at 19 sec...');
             try {
-              // 🔁 Check latest block status before redirect
+              const storedPhone = localStorage.getItem('userPhone'); // ✅ Always get fresh phone
+              if (!storedPhone) return;
+
               const statusRes = await axios.post(
                 'https://ali-web-backen.onrender.com/api/check-block',
-                { phone }
+                { phone: storedPhone }
               );
 
-              if (!statusRes.data.blocked) {
-                window.location.href = '/';
+              if (statusRes.data.blocked) {
+                alert('⛔ You are now blocked by admin.');
+                setLoggedIn(false);
+                localStorage.removeItem('userPhone');
               } else {
-                console.log('⛔ Redirect canceled, user is now blocked.');
+                window.location.href = '/'; // ✅ Still unblocked → go Home
               }
-
             } catch (err) {
               console.error('❌ Error checking block status:', err);
             }
-          }, 20000); // 20 seconds
+          }, 19000);
         }
-
       } else {
         alert('⛔ Blocked by admin');
       }
-
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('❌ Login error:', error);
       alert('❌ Error logging in');
     }
   };
@@ -67,10 +83,6 @@ const Login = ({ setLoggedIn }) => {
     }
   };
 
-  const handleFocus = (e) => {
-    e.target.select();
-  };
-
   return (
     <div className="container mt-5">
       <h3>Login with Phone Number</h3>
@@ -79,7 +91,6 @@ const Login = ({ setLoggedIn }) => {
           type="text"
           value={phone}
           onChange={handleChange}
-          onFocus={handleFocus}
           placeholder="Enter phone number"
           required
           className="form-control mb-2"

@@ -4,17 +4,21 @@ import axios from 'axios';
 const TotalUsersList = () => {
   const [users, setUsers] = useState([]);
   const [count, setCount] = useState(0);
+  const [loading, setLoading] = useState(false); // Spinner control
 
   const backendURL = 'https://ali-web-backen.onrender.com';
 
   // ✅ Users fetch karan wala function
   const fetchUsers = async () => {
+    setLoading(true); // Show spinner
     try {
       const res = await axios.get(`${backendURL}/api/users`);
       setUsers(res.data.users);
       setCount(res.data.count);
     } catch (error) {
       console.error('Error fetching users:', error);
+    } finally {
+      setLoading(false); // Hide spinner
     }
   };
 
@@ -49,9 +53,35 @@ const TotalUsersList = () => {
   }, []);
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 position-relative">
+      {/* 🧷 Sticky Refresh Button */}
+      <div
+        className="position-fixed bottom-0 end-0 m-4"
+        style={{ zIndex: 9999 }}
+      >
+        <button
+          className="btn btn-outline-primary btn-sm shadow"
+          onClick={fetchUsers}
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Refreshing...
+            </>
+          ) : (
+            <>🔄 Refresh Users</>
+          )}
+        </button>
+      </div>
+
       <h3 className="text-center mb-4">Admin Panel</h3>
       <p>Total Users: <strong>{count}</strong></p>
+
       <table className="table table-bordered">
         <thead>
           <tr>
